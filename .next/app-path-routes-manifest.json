@@ -1,7 +1,0 @@
-{
-  "/_global-error/page": "/_global-error",
-  "/_not-found/page": "/_not-found",
-  "/api/checkout_sessions/route": "/api/checkout_sessions",
-  "/page": "/",
-  "/success/page": "/success"
-}
