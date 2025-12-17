@@ -43,10 +43,13 @@ export default function PayPalPage() {
                     }}
                     onApprove={async (data, actions) => {
                         if (actions.order) {
-                            const details = await actions.order.capture();
-                            alert(`Transaction completed by ${details.payer?.name?.given_name}`);
-                            // You can also redirect to /success here
-                            window.location.href = '/success';
+                            try {
+                                await actions.order.capture();
+                                // Directly redirect without alert to prevent popup freezing
+                                window.location.href = '/success';
+                            } catch (error) {
+                                console.error("Capture Error:", error);
+                            }
                         }
                     }}
                     onError={(err) => {
