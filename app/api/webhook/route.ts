@@ -11,8 +11,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   // apiVersion: '2023-10-16',
 });
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 // This secret comes from your Stripe Dashboard (Developers > Webhooks)
 // or from the Stripe CLI if testing locally (`stripe listen`).
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -47,6 +45,7 @@ export async function POST(request: Request) {
       
       if (customerEmail && process.env.RESEND_API_KEY) {
         try {
+            const resend = new Resend(process.env.RESEND_API_KEY);
             await resend.emails.send({
                 from: 'Yorsson Payment <onboarding@resend.dev>', // Default Resend test email
                 to: customerEmail,
