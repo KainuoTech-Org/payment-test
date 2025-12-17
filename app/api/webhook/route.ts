@@ -45,7 +45,9 @@ export async function POST(request: Request) {
       
       if (customerEmail && process.env.RESEND_API_KEY) {
         try {
-            const resend = new Resend(process.env.RESEND_API_KEY);
+            // Initialize Resend with the key (or a dummy one to prevent build errors if the check fails somehow)
+            const resend = new Resend(process.env.RESEND_API_KEY || 're_123456789');
+            
             await resend.emails.send({
                 from: 'Yorsson Payment <onboarding@resend.dev>', // Default Resend test email
                 to: customerEmail,
