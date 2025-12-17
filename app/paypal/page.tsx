@@ -1,0 +1,67 @@
+'use client';
+
+import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import Link from 'next/link';
+
+export default function PayPalPage() {
+  const initialOptions = {
+    clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
+    currency: 'USD',
+    intent: 'capture',
+  };
+
+  return (
+    <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gray-50">
+      <div className="z-10 max-w-5xl w-full items-center justify-center font-mono text-sm lg:flex flex-col gap-8">
+        <div className="flex items-center gap-4 mb-8">
+            <Link href="/" className="text-blue-500 hover:underline">
+                &larr; Back to Home
+            </Link>
+            <h1 className="text-4xl font-bold text-gray-800">PayPal Checkout Demo</h1>
+        </div>
+        
+        <div className="p-8 bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col items-center gap-4 w-full max-w-md">
+          <p className="text-lg text-gray-600">Product: Premium Plan</p>
+          <p className="text-3xl font-bold text-gray-900 mb-6">$100.00</p>
+          
+          <div className="w-full">
+            <PayPalScriptProvider options={initialOptions}>
+                <PayPalButtons
+                    style={{ layout: 'vertical' }}
+                    createOrder={(data, actions) => {
+                        return actions.order.create({
+                            intent: "CAPTURE",
+                            purchase_units: [
+                                {
+                                    amount: {
+                                        currency_code: "USD",
+                                        value: "100.00",
+                                    },
+                                },
+                            ],
+                        });
+                    }}
+                    onApprove={async (data, actions) => {
+                        if (actions.order) {
+                            const details = await actions.order.capture();
+                            alert(`Transaction completed by ${details.payer?.name?.given_name}`);
+                            // You can also redirect to /success here
+                            window.location.href = '/success';
+                        }
+                    }}
+                    onError={(err) => {
+                        console.error("PayPal Checkout Error:", err);
+                        alert("An error occurred during payment.");
+                    }}
+                />
+            </PayPalScriptProvider>
+          </div>
+          
+          <p className="text-xs text-gray-400 mt-2 text-center">
+            Securely pay with PayPal Sandbox
+          </p>
+        </div>
+      </div>
+    </main>
+  );
+}

@@ -2,6 +2,7 @@
 
 import { loadStripe } from '@stripe/stripe-js';
 import type { Stripe } from '@stripe/stripe-js';
+import Link from 'next/link';
 
 // Make sure to call `loadStripe` outside of a component’s render to avoid
 // recreating the `Stripe` object on every render.
@@ -62,6 +63,12 @@ export default function Home() {
           <p className="text-xs text-gray-400 mt-2 text-center max-w-xs">
             Securely pay with Visa, Mastercard, AMEX, and Virtual Cards
           </p>
+
+          <div className="mt-8 border-t pt-6 w-full flex flex-col items-center">
+             <Link href="/paypal" className="text-blue-600 hover:text-blue-800 font-semibold text-sm">
+                Want to pay with PayPal? Click here &rarr;
+             </Link>
+          </div>
         </div>
       </div>
     </main>
