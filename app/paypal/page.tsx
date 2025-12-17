@@ -2,8 +2,16 @@
 
 import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
 import Link from 'next/link';
+import { useState, useEffect } from 'react';
 
 export default function PayPalPage() {
+  const [invoiceId, setInvoiceId] = useState('');
+
+  useEffect(() => {
+    // Generate a unique invoice ID on client side
+    setInvoiceId(`ORD-${Date.now()}`);
+  }, []);
+
   const initialOptions = {
     clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || '',
     currency: 'USD',
@@ -22,7 +30,12 @@ export default function PayPalPage() {
         
         <div className="p-8 bg-white rounded-xl shadow-lg border border-gray-100 flex flex-col items-center gap-4 w-full max-w-md">
           <p className="text-lg text-gray-600">Product: Premium Plan</p>
-          <p className="text-3xl font-bold text-gray-900 mb-6">$100.00</p>
+          <p className="text-3xl font-bold text-gray-900 mb-2">$100.00</p>
+          {invoiceId && (
+            <p className="text-xs text-gray-500 mb-4 bg-gray-100 px-2 py-1 rounded">
+              Order ID: {invoiceId}
+            </p>
+          )}
           
           <div className="w-full">
             <PayPalScriptProvider options={initialOptions}>
@@ -37,6 +50,8 @@ export default function PayPalPage() {
                                         currency_code: "USD",
                                         value: "100.00",
                                     },
+                                    invoice_id: invoiceId,
+                                    custom_id: invoiceId, // Also set custom_id for reference
                                 },
                             ],
                         });
